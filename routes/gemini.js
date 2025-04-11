@@ -1,8 +1,10 @@
+const GEMINI_API_KEY= "AIzaSyCvfFfIlXjuSg398y8KFR50gooU10_X-uo"
+
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
-const GEMINI_API_KEY = "AIzaSyCvfFfIlXjuSg398y8KFR50gooU10_X-uo"
+// const GEMINI_API_KEY = "AIerSyCvfFskoejuSg398y8KFR50gooU10_X-uo"
 
 router.post('/', async (req, res) => {
     const userInput = req.body;
@@ -34,39 +36,42 @@ router.post('/', async (req, res) => {
       res.status(500).json({ error: 'Failed to get response from Gemini API' });
     }
   });
-  
+
   function generatePrompt(data) {
     return `
-  You are an expert AI legal assistant. Based on Indian divorce laws and current legal practices, suggest a rough estimate and legal advice regarding alimony using the following client details:
+  You are an expert AI legal assistant. Based on Indian divorce laws, give a short and clear estimate of monthly alimony liability with minimal explanation.
   
-  🔹 Basic Information:
-  - Age of Husband: ${data.husbandAge} years
-  - Age of Wife: ${data.wifeAge} years
+  📌 Client Details:
+  - Husband's Age: ${data.husbandAge}
+  - Wife's Age: ${data.wifeAge}
   - Marriage Duration: ${data.duration} years
-  - Number of Children: ${data.children}
-  - Divorce Filed By: ${data.divorceFiledBy}
-  - Domestic Abuse Reported: ${data.domesticAbuse ? "Yes" : "No"}
-  
-  🔹 Financial Details:
+  - Husband's Employment Type: ${data.husbandEmploymentType || "Not provided"}
   - Husband's Monthly Income: ₹${data.husbandIncome}
   - Wife's Monthly Income: ₹${data.wifeIncome}
   - Wife's Education Level: ${data.wifeEducation}
-  - Did Wife Sacrifice Career for Family?: ${data.careerSacrifice ? "Yes" : "No"}
+  - Wife's Health Condition: ${data.wifeHealthCondition || "Not provided"}
+  - Wife Sacrificed Career: ${data.careerSacrifice ? "Yes" : "No"}
+  - Domestic Abuse Reported: ${data.domesticAbuse ? "Yes" : "No"}
+  - Number of Children: ${data.children}
+  - Custody Decision: ${data.custodyDecision || "Undecided"}
+  - Living Standard: ${data.livingStandard || "Not mentioned"}
+  - Joint Assets (house, land, etc): ${data.jointAssets || "Not provided"}
+  - Divorce Filed By: ${data.divorceFiledBy || "Not mentioned"}
+  - Additional Notes: ${data.otherDetails || "None"}
   
-  🔹 Assets Owned:
-  ${data.assets || "Not provided"}
+  📎 Response Format: Directly start with 1 . 
+  1. Estimated Alimony (₹/month): ₹[amount]
+  2. Duration or lump-sum estimate if applicable
+  3. Any legal consequences (e.g. asset division, child custody impact)
+  4. Suggested legal steps (consultation, mediation, documentation)
+  Directly start with 1 .
   
-  🔹 Additional Notes by User:
-  ${data.otherDetails || "None"}
-  
-  💡 Instructions:
-  - Based on all of the above, estimate how much alimony the husband might be liable to pay per month.
-  - Consider the ASSETS while estimating alimony — whether they should impact the amount or be shared.
-  - Clearly explain why the estimated amount is fair or reasonable under Indian legal practices.
-  - Keep the tone clear, helpful, and easy to understand for a general user.dont tell what i had given to you. the answer should be short and should be point wise.
-   - also the amount should be first and then yourr short suggestion
+  Only return precise, legal points. Avoid repeating the inputs.
   `;
   }
+  
+  
+
   
   
   
